@@ -27,11 +27,15 @@ public class RegisterController {
     @PostMapping("/register")
     public ResponseEntity<String> postRegister(@RequestBody String input){
         Map map = gson.fromJson(input, Map.class);
+        HashMap<String,String> msg = new HashMap<>();
         try {
-            userService.save(userService.registerUser((String) map.get("password"),(String)map.get("email"),(String) map.get("role"),(String)map.get("name"),(String)map.get("moderateCategory")));
+            userService.save(userService.registerUser((String) map.get("password"),(String)map.get("email"),
+                    (String) map.get("role"),(String)map.get("name"),(String)map.get("moderateCategory")));
         }catch (Exception e){
-            return new ResponseEntity<>(gson.toJson("{message: This user already exists}"), HttpStatus.BAD_REQUEST);
+            msg.put("message","This user already exists");
+            return new ResponseEntity<>(gson.toJson(msg), HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(gson.toJson("{message: done}"), HttpStatus.OK);
+        msg.put("message","done");
+        return new ResponseEntity<>(gson.toJson(msg), HttpStatus.OK);
     }
 }

@@ -17,7 +17,6 @@ public class User {
     @Column(unique = true)
     String email;
     String name;
-    String permissions;
     String role;
     String password;
 
@@ -32,6 +31,10 @@ public class User {
     @Expose(serialize = false)
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, orphanRemoval = true)
     Set<Reply> replies;
+
+    @ManyToOne(optional = true, fetch = FetchType.EAGER)
+    @JoinColumn(name = "category_id", nullable = true)
+    Category category;
 
 
     public Long getId() {
@@ -66,14 +69,6 @@ public class User {
         this.name = name;
     }
 
-    public String getPermissions() {
-        return permissions;
-    }
-
-    public void setPermissions(String permissions) {
-        this.permissions = permissions;
-    }
-
     public String getRole() {
         return role;
     }
@@ -97,9 +92,12 @@ public class User {
                 ", avatarUrl='" + avatarUrl + '\'' +
                 ", email='" + email + '\'' +
                 ", name='" + name + '\'' +
-                ", permissions='" + permissions + '\'' +
                 ", role='" + role + '\'' +
+                ", password='" + password + '\'' +
+                ", categories=" + categories +
                 ", topics=" + topics +
+                ", replies=" + replies +
+                ", category=" + category +
                 '}';
     }
 
@@ -125,5 +123,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Category getCategoryModerated() {
+        return category;
+    }
+
+    public void setCategoryModerated(Category category) {
+        this.category = category;
     }
 }

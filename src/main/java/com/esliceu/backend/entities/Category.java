@@ -25,8 +25,12 @@ public class Category {
     @OneToMany(mappedBy = "category", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, orphanRemoval = true)
     Set<Topic> topics;
 
+    @Expose(serialize = false)
+    @OneToMany(mappedBy = "category", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    Set<User> moderators;
+
     @ManyToOne(optional = true, fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = true)
     User user;
 
     public String getColor() {

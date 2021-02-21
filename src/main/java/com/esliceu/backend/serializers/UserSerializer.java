@@ -10,6 +10,8 @@ import com.google.gson.JsonSerializer;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class UserSerializer implements JsonSerializer<User> {
@@ -28,8 +30,6 @@ public class UserSerializer implements JsonSerializer<User> {
         jsonObject.addProperty("role",user.getRole());
         jsonObject.addProperty("__v",0);
         jsonObject.addProperty("_id",user.getId());
-
-        // List<Category> categoryList =
 
         return jsonObject;
     }
