@@ -24,7 +24,7 @@ public class UserController {
     @ResponseBody
     public String setInfoUser() throws Exception {
         User u = new User();
-        u.setEmail("tomca467@gmail.com");
+        u.setEmail("bcastaner@gmail.com");
         u.setName("Tolo");
         u.setRole("admin");
         userService.save(u);

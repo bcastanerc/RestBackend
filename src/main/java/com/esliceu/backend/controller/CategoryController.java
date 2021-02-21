@@ -43,8 +43,6 @@ public class CategoryController {
 
         categoryService.save(c);
 
-
-
         return "Ok";
     }
 

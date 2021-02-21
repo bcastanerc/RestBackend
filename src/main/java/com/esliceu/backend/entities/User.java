@@ -13,10 +13,13 @@ public class User {
     Long id;
 
     String avatarUrl;
+
+    @Column(unique = true)
     String email;
     String name;
     String permissions;
     String role;
+    String password;
 
     @Expose(serialize = false)
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE, orphanRemoval = true)
@@ -114,5 +117,13 @@ public class User {
 
     public void setReplies(Set<Reply> replies) {
         this.replies = replies;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
