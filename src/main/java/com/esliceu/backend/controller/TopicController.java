@@ -2,9 +2,6 @@ package com.esliceu.backend.controller;
 
 import com.esliceu.backend.entities.Category;
 import com.esliceu.backend.entities.Topic;
-import com.esliceu.backend.entities.User;
-import com.esliceu.backend.repos.TopicRepository;
-import com.esliceu.backend.serializers.CategorySerializer;
 import com.esliceu.backend.serializers.TopicSerializer;
 import com.esliceu.backend.serializers.TopicSerializerComplete;
 import com.esliceu.backend.services.CategoryService;
@@ -17,11 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @RestController
 public class TopicController {
