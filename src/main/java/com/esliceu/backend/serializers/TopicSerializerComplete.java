@@ -29,14 +29,20 @@ public class TopicSerializerComplete  implements JsonSerializer<Topic> {
         jsonObject.addProperty("content",topic.getContent());
         jsonObject.addProperty("createdAt",topic.getCreatedAt().format(formatter));
         jsonObject.addProperty("id", topic.getId());
-        jsonObject.addProperty("numberOfReplies", topic.getReplies().size());
-        jsonObject.add("replies", gson.toJsonTree(topic.getReplies()));
         jsonObject.addProperty("title", topic.getTitle());
         jsonObject.addProperty("updatedAt", topic.getUpdatedAt().format(formatter));
         jsonObject.add("user", gson.toJsonTree(topic.getUser()));
         jsonObject.addProperty("views", topic.getViews());
         jsonObject.addProperty("__v", 0);
         jsonObject.addProperty("_id", topic.getId());
+
+        if (topic.getReplies() == null || topic.getReplies().isEmpty()){
+            jsonObject.addProperty("numberOfReplies", 0);
+            jsonObject.add("replies", gson.toJsonTree(topic.getReplies()));
+        }else{
+            jsonObject.addProperty("numberOfReplies", topic.getReplies().size());
+            jsonObject.add("replies", gson.toJsonTree(topic.getReplies()));
+        }
 
         return jsonObject;
     }

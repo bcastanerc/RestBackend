@@ -8,17 +8,13 @@ import com.esliceu.backend.services.TokenService;
 import com.esliceu.backend.services.UserService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.sun.source.tree.TryTree;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
-import java.util.Set;
 
 @RestController
 public class CategoryController {
@@ -35,19 +31,6 @@ public class CategoryController {
 
     @Autowired
     TokenService tokenService;
-
-    @GetMapping("/setInfo")
-    @ResponseBody
-    public String setInfo() throws Exception {
-        Category c = new Category();
-        c.setDescription("Segunda categoria 22");
-        c.setTitle("Segunda prueba  22");
-        c.setSlug("Prueba-Segunda-22");
-        c.setColor("hsl(300,50%,50%)");
-        c.setUser(userService.findById(1L));
-        categoryService.save(c);
-        return "Ok";
-    }
 
     @GetMapping("/categories")
     public ResponseEntity<String> getCategories(){

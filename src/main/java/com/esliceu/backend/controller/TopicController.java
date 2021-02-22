@@ -15,13 +15,12 @@ import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -44,9 +43,8 @@ public class TopicController {
     @Autowired
     UserService userService;
 
-
     @GetMapping("/categories/{slug}/topics")
-    public ResponseEntity<String> getCategoryTopics(@PathVariable String slug){
+    public ResponseEntity<String> getCategoryTopics(@PathVariable String slug) {
         Category category = categoryService.findCategoryBySlug(slug);
         List<Topic> topics = topicService.findAllByCategoryId(category.getId());
         return new ResponseEntity(gson.toJson(topics), HttpStatus.OK);
@@ -60,39 +58,41 @@ public class TopicController {
         return new ResponseEntity(gsonComplete.toJson(topic), HttpStatus.OK);
     }
 
+    @PostMapping("/topics")
+    public ResponseEntity<String> postTopics(@RequestAttribute String user, @RequestBody String payload) {
+        Map map = gson.fromJson(payload, Map.class);
+        HashMap<String, String> msg = new HashMap<>();
+        msg.put("message","error");
+        try {
+            return new ResponseEntity(gson.toJson(topicService.updateCreate(null,(String) map.get("category"),
+                    (String) map.get("content"),(String) map.get("title"), user)), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity(gson.toJson(msg), HttpStatus.BAD_REQUEST);
 
-    @GetMapping("/setInfoTopic")
-    @ResponseBody
-    public String setInfo() throws Exception {
-        LocalDateTime now = LocalDateTime.now();
-
-        Topic t = new Topic();
-        t.setContent("Topic2 Category2 user 1");
-        t.setTitle("Hola");
-        t.setCreatedAt(now);
-        t.setUpdatedAt(now);
-        t.setCategory(categoryService.findById(1L));
-        t.setUser(userService.findById(1L));
-
-        topicService.save(t);
-
-        return "Ok";
+        }
     }
 
-   /* @Autowired
-    CategoryService categoryService;
+    @PutMapping("/topics/{id_topic}")
+    public ResponseEntity<String> putTopicById(@RequestAttribute String user, @PathVariable Long id_topic, @RequestBody String payload) {
+        Map map = gson.fromJson(payload, Map.class);
+        HashMap<String, String> msg = new HashMap<>();
+        msg.put("message","error");
+        try {
+            Topic topic = topicService.updateCreate(id_topic,(String) map.get("category"),
+                    (String) map.get("content"),(String) map.get("title"), user);
+            return new ResponseEntity(gson.toJson(topic), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity(gson.toJson(msg), HttpStatus.OK);
+        }
+    }
 
-    @Autowired
-    TopicService topicService;
-
-    @Autowired
-    TopicRepository topicRepository;
-
-    @GetMapping("/categories/{slug}/topics")
-    public ResponseEntity<String> getCategoryTopics(@PathVariable String slug){
-        Category category = categoryService.findCategoryBySlug(slug);
-        // List<Topic> topics = topicService.findAll();
-        System.out.println(topicRepository.findById(1).toString());
-        return new ResponseEntity(topicRepository.findById(1), HttpStatus.OK);
-    }*/
+    @DeleteMapping("/topics/{id_topic}")
+    public ResponseEntity<String> putTopicById(@PathVariable Long id_topic){
+        try {
+            topicService.delete(topicService.findByID(id_topic));
+            return new ResponseEntity(true, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity(false, HttpStatus.BAD_REQUEST);
+        }
+    }
 }

@@ -21,6 +21,9 @@ public class UserServiceImpl implements UserService{
     @Autowired
     CategoryService categoryService;
 
+    @Autowired
+    TokenService tokenService;
+
     @Override
     public User findUserByEmailEquals(String email) {
         return userRepository.findUserByEmailEquals(email);
@@ -72,6 +75,31 @@ public class UserServiceImpl implements UserService{
     public User login(String email, String password) throws NoSuchAlgorithmException {
         User u = findUserByEmailEquals(email);
         if (encryptPassword(password).equals(u.getPassword())) return u;
+        return null;
+    }
+
+    @Override
+    public HashMap<String, Object> updateUserToken(String actual, String email, String name, String avatar, String password, String newPass) throws NoSuchAlgorithmException {
+        User u = findUserByEmailEquals(actual);
+        if ((password != null && newPass !=null)|| (email != null && name != null)){
+            HashMap<String, Object> tokenUser = new HashMap<>();
+            if (password != null && u.getPassword().equals(encryptPassword(password)) && !encryptPassword(newPass).equals(u.getPassword())){
+                u.setPassword(encryptPassword(newPass));
+                save(u);
+                tokenUser.put("token", tokenService.newToken(email));
+                tokenUser.put("user", u);
+                return  tokenUser;
+            }
+            if (findUserByEmailEquals(email) == null || email.equals(actual)) {
+                u.setEmail(email);
+                u.setAvatarUrl(avatar);
+                u.setName(name);
+                save(u);
+                tokenUser.put("token", tokenService.newToken(email));
+                tokenUser.put("user", u);
+                return  tokenUser;
+            }
+        }
         return null;
     }
 }

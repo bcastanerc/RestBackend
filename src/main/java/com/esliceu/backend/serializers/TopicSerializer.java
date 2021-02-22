@@ -26,7 +26,6 @@ public class TopicSerializer  implements JsonSerializer<Topic> {
         jsonObject.addProperty("content",topic.getContent());
         jsonObject.addProperty("createdAt",topic.getCreatedAt().format(formatter));
         jsonObject.addProperty("id", topic.getId());
-        jsonObject.addProperty("numberOfReplies", topic.getReplies().size());
         jsonObject.addProperty("replies", "");
         jsonObject.addProperty("title", topic.getTitle());
         jsonObject.addProperty("updatedAt", topic.getUpdatedAt().format(formatter));
@@ -34,6 +33,11 @@ public class TopicSerializer  implements JsonSerializer<Topic> {
         jsonObject.addProperty("views", topic.getViews());
         jsonObject.addProperty("__v", 0);
         jsonObject.addProperty("_id", topic.getId());
+        if (topic.getReplies() == null || topic.getReplies().isEmpty()){
+            jsonObject.addProperty("numberOfReplies", 0);
+        }else{
+            jsonObject.addProperty("numberOfReplies", topic.getReplies().size());
+        }
 
         return jsonObject;
     }

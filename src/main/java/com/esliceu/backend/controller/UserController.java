@@ -1,7 +1,6 @@
 package com.esliceu.backend.controller;
 
 import com.esliceu.backend.entities.User;
-import com.esliceu.backend.repos.UserRepository;
 import com.esliceu.backend.serializers.UserPermisionsSerializer;
 import com.esliceu.backend.serializers.UserSerializer;
 import com.esliceu.backend.services.UserService;
@@ -11,11 +10,10 @@ import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 public class UserController {
@@ -34,26 +32,43 @@ public class UserController {
     @Autowired
     TokenService tokenService;
 
-    @Autowired
-    UserRepository userRepository;
-
-    @GetMapping("/setInfoUser")
-    @ResponseBody
-    public String setInfoUser() throws Exception {
-        User u = new User();
-        u.setEmail("tomca467@gmail.com");
-        u.setName("Tolo");
-        u.setRole("admin");
-        userService.save(u);
-    return "Ok";
-    }
-
     @GetMapping("/getprofile")
-    @ResponseBody
-    public ResponseEntity<String> getProfile(HttpServletRequest request){
-        String token = request.getHeader("Authorization").replace("Bearer ", "");
-        User u = userService.findUserByEmailEquals(tokenService.getSubject(token));
-        return new ResponseEntity<>(gsonPermissions.toJson(u), HttpStatus.OK);
+    public ResponseEntity<String> getProfile(@RequestAttribute String user) {
+        return new ResponseEntity<>(gsonPermissions.toJson(userService.findUserByEmailEquals(user)), HttpStatus.OK);
     }
 
+    @PutMapping("/profile")
+    public ResponseEntity<String> putProfile(@RequestAttribute String user, @RequestBody String payload) {
+        Map map = gson.fromJson(payload, Map.class);
+        HashMap<String, String> msg = new HashMap<>();
+       try {
+           HashMap<String, Object> tokenUser = userService.updateUserToken(user, (String) map.get("email"), (String) map.get("name"),
+                   (String) map.get("avatar"), null, null);
+           if (tokenUser != null) {
+               return new ResponseEntity<>(gsonPermissions.toJson(tokenUser), HttpStatus.OK);
+           }
+       }catch (Exception e){
+           msg.put("message", "An error occured while updating your profile.");
+           return new ResponseEntity<>(gson.toJson(msg), HttpStatus.NOT_ACCEPTABLE);
+       }
+        msg.put("message", " The introduced email allready exists.");
+        return new ResponseEntity<>(gson.toJson(msg), HttpStatus.BAD_REQUEST);
+    }
+
+    @PutMapping("/profile/password")
+    public ResponseEntity<String> putProfilePassword(@RequestAttribute String user, @RequestBody String payload) {
+        Map map = gson.fromJson(payload, Map.class);
+        HashMap<String, String> msg = new HashMap<>();
+        try {
+            HashMap<String, Object> tokenUser = userService.updateUserToken(user, null,null,null,(String) map.get("currentPassword"), (String) map.get("newPassword"));
+            if (tokenUser != null) {
+                return new ResponseEntity<>(gsonPermissions.toJson(tokenUser), HttpStatus.OK);
+            }
+        }catch (Exception e){
+            msg.put("message", " Your new password cannot be the same as the old password.");
+            return new ResponseEntity<>(gson.toJson(msg),HttpStatus.BAD_REQUEST);
+        }
+        msg.put("message",  "There is an unexpected error.");
+        return new ResponseEntity<>(gson.toJson(msg),HttpStatus.BAD_REQUEST);
+    }
 }

@@ -12,6 +12,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
+    @Column(columnDefinition="TEXT")
     String avatarUrl;
 
     @Column(unique = true)

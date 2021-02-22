@@ -27,8 +27,6 @@ public class UserPermisionsSerializer implements JsonSerializer<User> {
         jsonObject.addProperty("__v",0);
         jsonObject.addProperty("_id",user.getId());
 
-
-
         ArrayList<String> categoriesPermissions = new ArrayList<>();
         categoriesPermissions.add("categories_topics:write");
         categoriesPermissions.add("categories_topics:delete");
