@@ -30,13 +30,14 @@ public class Config implements WebMvcConfigurer {
         interceptorMappingList.add("/profile");
         interceptorMappingList.add("/topics/*/replies");
         interceptorMappingList.add("/topics");
+        interceptorMappingList.add("/categories");
+        interceptorMappingList.add("/categories/+");
         return interceptorMappingList;
     }
 
     @Bean
     public List<String> getExcludeMapping(){
         List<String> excludeMapping = new ArrayList<>();
-        excludeMapping.add("/categories");
         excludeMapping.add("/register");
         excludeMapping.add("/login");
         return excludeMapping;

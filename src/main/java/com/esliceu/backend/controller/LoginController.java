@@ -48,7 +48,7 @@ public class LoginController {
             return new ResponseEntity<>(gsonPermissions.toJson(tokenUser), HttpStatus.OK);
         } else {
             HashMap<String,String> msg = new HashMap<>();
-            msg.put("message","Tncorrect email or password");
+            msg.put("message","Incorrect email or password");
             return new ResponseEntity<>(gson.toJson(msg), HttpStatus.BAD_REQUEST);
         }
     }

@@ -1,6 +1,5 @@
 package com.esliceu.backend.controller;
 
-import com.esliceu.backend.entities.Category;
 import com.esliceu.backend.entities.Topic;
 import com.esliceu.backend.serializers.TopicSerializer;
 import com.esliceu.backend.serializers.TopicSerializerComplete;
@@ -40,9 +39,7 @@ public class TopicController {
 
     @GetMapping("/categories/{slug}/topics")
     public ResponseEntity<String> getCategoryTopics(@PathVariable String slug) {
-        Category category = categoryService.findCategoryBySlug(slug);
-        List<Topic> topics = topicService.findAllByCategoryId(category.getId());
-        return new ResponseEntity(gson.toJson(topics), HttpStatus.OK);
+        return new ResponseEntity(gson.toJson(topicService.findAllByCategoryId(categoryService.findCategoryBySlug(slug).getId())), HttpStatus.OK);
     }
 
     @GetMapping("/topics/{id_topic}")
@@ -73,9 +70,8 @@ public class TopicController {
         HashMap<String, String> msg = new HashMap<>();
         msg.put("message","error");
         try {
-            Topic topic = topicService.updateCreate(id_topic,(String) map.get("category"),
-                    (String) map.get("content"),(String) map.get("title"), user);
-            return new ResponseEntity(gson.toJson(topic), HttpStatus.OK);
+            return new ResponseEntity(gson.toJson(topicService.updateCreate(id_topic,(String) map.get("category"),
+                    (String) map.get("content"),(String) map.get("title"), user)), HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity(gson.toJson(msg), HttpStatus.OK);
         }

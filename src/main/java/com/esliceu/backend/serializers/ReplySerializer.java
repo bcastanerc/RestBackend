@@ -1,15 +1,11 @@
 package com.esliceu.backend.serializers;
 
-import com.esliceu.backend.entities.Category;
 import com.esliceu.backend.entities.Reply;
 import com.esliceu.backend.entities.User;
 import com.google.gson.*;
-import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ReplySerializer implements JsonSerializer<Reply> {
     Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation()

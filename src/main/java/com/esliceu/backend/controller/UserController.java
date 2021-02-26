@@ -7,6 +7,7 @@ import com.esliceu.backend.services.UserService;
 import com.esliceu.backend.services.TokenService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,19 +41,16 @@ public class UserController {
     @PutMapping("/profile")
     public ResponseEntity<String> putProfile(@RequestAttribute String user, @RequestBody String payload) {
         Map map = gson.fromJson(payload, Map.class);
-        HashMap<String, String> msg = new HashMap<>();
        try {
-           HashMap<String, Object> tokenUser = userService.updateUserToken(user, (String) map.get("email"), (String) map.get("name"),
-                   (String) map.get("avatar"), null, null);
+           HashMap<String, Object> tokenUser = userService.updateUserToken(user, (String) map.get("email"),
+                   (String) map.get("name"), (String) map.get("avatar"), null, null);
            if (tokenUser != null) {
                return new ResponseEntity<>(gsonPermissions.toJson(tokenUser), HttpStatus.OK);
            }
        }catch (Exception e){
-           msg.put("message", "An error occured while updating your profile.");
-           return new ResponseEntity<>(gson.toJson(msg), HttpStatus.NOT_ACCEPTABLE);
+           return new ResponseEntity(gson.toJson(JsonParser.parseString("{\"message\":\"An error occured while updating your profile.\"}")),HttpStatus.BAD_REQUEST);
        }
-        msg.put("message", " The introduced email allready exists.");
-        return new ResponseEntity<>(gson.toJson(msg), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity(gson.toJson(JsonParser.parseString("{\"message\":\"The introduced email allready exists.\"}")),HttpStatus.BAD_REQUEST);
     }
 
     @PutMapping("/profile/password")

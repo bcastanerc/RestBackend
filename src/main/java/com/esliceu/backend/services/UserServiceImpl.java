@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public User login(String email, String password) throws NoSuchAlgorithmException {
         User u = findUserByEmailEquals(email);
-        if (encryptPassword(password).equals(u.getPassword())) return u;
+        if ( u !=null && encryptPassword(password).equals(u.getPassword())) return u;
         return null;
     }
 

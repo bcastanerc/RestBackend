@@ -51,6 +51,6 @@ public class ReplyServiceImpl implements ReplyService{
 
     @Override
     public void delete(Reply r) {
-
+        replyRepository.delete(r);
     }
 }

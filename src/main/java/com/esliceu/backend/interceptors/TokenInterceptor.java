@@ -15,7 +15,7 @@ public class TokenInterceptor implements HandlerInterceptor {
     TokenService tokenService;
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         if (request.getMethod().equals("OPTIONS")) return true;
         String header = request.getHeader("Authorization");
         try{
@@ -23,10 +23,9 @@ public class TokenInterceptor implements HandlerInterceptor {
             String user = tokenService.getSubject(token);
             request.setAttribute("user", user);
             return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return false;
+        }catch (Exception e){
+            request.setAttribute("user", null);
+            return true;
         }
     }
 }

@@ -8,6 +8,7 @@ import com.esliceu.backend.services.TokenService;
 import com.esliceu.backend.services.UserService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,17 +44,12 @@ public class CategoryController {
     }
 
     @PostMapping("/categories")
-    public ResponseEntity<String> postCategory(@RequestBody String payload, HttpServletRequest request) {
+    public ResponseEntity<String> postCategory(@RequestBody String payload,@RequestAttribute String user) {
         Map map = gson.fromJson(payload, Map.class);
-
-        String token = request.getHeader("Authorization").replace("Bearer ", "");
         try {
-            User u = userService.findUserByEmailEquals(tokenService.getSubject(token));
-            Category c = categoryService.createCatrgory((String) map.get("title"),(String) map.get("description"),u);
-            categoryService.save(c);
-            return new ResponseEntity(gson.toJson(c),HttpStatus.OK);
+            return new ResponseEntity(gson.toJson( categoryService.save(categoryService.createCatrgory((String) map.get("title"),(String) map.get("description"),user))),HttpStatus.OK);
         }catch (Exception e){
-            return new ResponseEntity(gson.toJson(""),HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(gson.toJson(JsonParser.parseString("{\"message\":\"Error\"}")),HttpStatus.BAD_REQUEST);
         }
     }
 

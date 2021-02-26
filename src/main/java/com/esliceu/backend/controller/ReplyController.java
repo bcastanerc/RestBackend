@@ -7,6 +7,7 @@ import com.esliceu.backend.services.TopicService;
 import com.esliceu.backend.services.UserService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,14 +38,22 @@ public class ReplyController {
 
     @PostMapping("/topics/{id_topic}/replies")
     public ResponseEntity<String> postReply(@PathVariable Long id_topic, @RequestAttribute String user, @RequestBody String payload){
-        Map map = gson.fromJson(payload, Map.class);
-        return new ResponseEntity(gson.toJson(replyService.updateCreate(null,id_topic,(String) map.get("content"), user)), HttpStatus.OK);
+        try {
+            Map map = gson.fromJson(payload, Map.class);
+            return new ResponseEntity(gson.toJson(replyService.updateCreate(null,id_topic,(String) map.get("content"), user)), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity(gson.toJson(JsonParser.parseString("{\"message\":\"An error occured while creating the reply\"}")),HttpStatus.BAD_REQUEST);
+        }
     }
 
     @PutMapping("/topics/{id_topic}/replies/{id_reply}")
     public ResponseEntity<String> postReply(@PathVariable Long id_topic, @PathVariable Long id_reply, @RequestBody String payload){
-        Map map = gson.fromJson(payload, Map.class);
-        return new ResponseEntity(gson.toJson(replyService.updateCreate(id_reply, id_topic,(String) map.get("content"), null)), HttpStatus.OK);
+        try {
+            Map map = gson.fromJson(payload, Map.class);
+            return new ResponseEntity(gson.toJson(replyService.updateCreate(id_reply, id_topic,(String) map.get("content"), null)), HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity(gson.toJson(JsonParser.parseString("{\"message\":\"An error occured while updating the reply\"}")),HttpStatus.BAD_REQUEST);
+        }
     }
 
     @DeleteMapping("/topics/{id_topic}/replies/{id_reply}")

@@ -38,13 +38,10 @@ public class UserPermisionsSerializer implements JsonSerializer<User> {
         if (user.getRole().equals("moderator")){
             categoryPermissions.put(user.getCategoryModerated().getSlug(), categoriesPermissions);
         }
-
         HashMap<String, Object> permissions = new HashMap<>();
         permissions.put("categories", categoryPermissions);
         permissions.put("root", getPermissionsByRole(user));
-
         jsonObject.add("permissions",gson.toJsonTree(permissions));
-
         return jsonObject;
     }
 
@@ -58,7 +55,6 @@ public class UserPermisionsSerializer implements JsonSerializer<User> {
             root.add("categories:write");
             root.add("categories:delete");
         }
-
         return root;
     }
 }

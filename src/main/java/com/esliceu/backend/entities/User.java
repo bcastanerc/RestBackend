@@ -12,7 +12,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    @Column(columnDefinition="TEXT")
+    @Lob
     String avatarUrl;
 
     @Column(unique = true)
@@ -44,14 +44,6 @@ public class User {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getAvatarUrl() {
-        return avatarUrl;
-    }
-
-    public void setAvatarUrl(String avatarUrl) {
-        this.avatarUrl = avatarUrl;
     }
 
     public String getEmail() {
@@ -132,5 +124,21 @@ public class User {
 
     public void setCategoryModerated(Category category) {
         this.category = category;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 }
